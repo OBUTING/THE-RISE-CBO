@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Portal — The Rise CBO</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C1502E'/%3E%3Ccircle cx='16' cy='13' r='5.5' fill='%23F8F1E4'/%3E%3Cpath d='M6 27c1.5-6 6-9 10-9s8.5 3 10 9' stroke='%23E8A33D' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a href="home.html" class="logo" aria-label="The Rise CBO — Home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="currentColor"/><circle cx="16" cy="13" r="5.5" fill="var(--cream)"/><path d="M6 27c1.5-6 6-9 10-9s8.5 3 10 9" stroke="var(--amber)" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      </span>
+      <span class="logo-word">The Rise <em>CBO</em></span>
+    </a>
+
+    <nav class="nav-main" aria-label="Primary">
+      <ul>
+        <li><a href="home.html" data-nav="home">Home</a></li>
+        <li><a href="about.html" data-nav="about">About</a></li>
+        <li><a href="programs.html" data-nav="programs">Programs</a></li>
+        <li><a href="gallery.html" data-nav="gallery">Gallery</a></li>
+        <li><a href="contact.html" data-nav="contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <button type="button" class="btn btn-primary btn-sm" data-open-modal="modal-get-involved">
+        <i class="icon" data-icon="heart" aria-hidden="true"></i> Get Involved
+      </button>
+      <a href="admin.html" class="admin-link is-current" title="Admin Portal" data-nav="admin">
+        <i class="icon" data-icon="lock" aria-hidden="true"></i><span class="sr-only">Admin Portal</span>
+      </a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile">
+        <i class="icon" data-icon="menu" aria-hidden="true"></i>
+        <span class="sr-only">Open menu</span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile" hidden>
+    <ul>
+      <li><a href="home.html" data-nav="home">Home</a></li>
+      <li><a href="about.html" data-nav="about">About</a></li>
+      <li><a href="programs.html" data-nav="programs">Programs</a></li>
+      <li><a href="gallery.html" data-nav="gallery">Gallery</a></li>
+      <li><a href="contact.html" data-nav="contact">Contact</a></li>
+      <li><a href="admin.html" data-nav="admin">Admin Portal</a></li>
+    </ul>
+    <button type="button" class="btn btn-primary btn-block" data-open-modal="modal-get-involved">
+      <i class="icon" data-icon="heart" aria-hidden="true"></i> Get Involved
+    </button>
+  </nav>
+</header>
+
+<main id="main-content">
+<section class="admin-login-wrap" id="admin-login-view">
+    <div class="admin-login-card">
+      <span class="logo-mark lg" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="currentColor"/><circle cx="16" cy="13" r="5.5" fill="var(--cream)"/><path d="M6 27c1.5-6 6-9 10-9s8.5 3 10 9" stroke="var(--amber)" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      </span>
+      <h1>Admin Portal</h1>
+      <p class="admin-login-sub">Sign in to manage The Rise CBO's gallery, videos, resources and inquiries.</p>
+
+      <form id="form-admin-login" novalidate>
+        <div class="form-row">
+          <label for="admin-email">Email</label>
+          <input type="email" id="admin-email" name="email" required autocomplete="username">
+        </div>
+        <div class="form-row">
+          <label for="admin-password">Password</label>
+          <div class="password-field">
+            <input type="password" id="admin-password" name="password" required autocomplete="current-password">
+            <button type="button" class="password-toggle" id="admin-password-toggle" aria-label="Show password">
+              <i class="icon" data-icon="eye" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <label class="checkbox-row">
+          <input type="checkbox" id="admin-remember" checked>
+          <span>Keep me signed in on this device</span>
+        </label>
+        <p class="form-error" id="admin-login-error" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="icon" data-icon="log-in" aria-hidden="true"></i> Log In
+        </button>
+      </form>
+
+      <div class="demo-creds">
+        <p><strong>Demo credentials</strong> (first run)</p>
+        <code>admin@therisecbo.org</code> / <code>RiseKahawa2026!</code>
+        <button type="button" class="btn btn-outline btn-sm mt-md" id="fill-demo-creds">Fill demo credentials</button>
+      </div>
+      <a href="home.html" class="back-to-site"><i class="icon" data-icon="arrow-left" aria-hidden="true"></i> Back to site</a>
+    </div>
+  </section>
+
+  <section class="admin-shell" id="admin-dashboard-view" hidden>
+    <aside class="admin-sidebar">
+      <a href="home.html" class="admin-sidebar-brand">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="currentColor"/><circle cx="16" cy="13" r="5.5" fill="var(--cream)"/><path d="M6 27c1.5-6 6-9 10-9s8.5 3 10 9" stroke="var(--amber)" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+        </span>
+        <span>The Rise CBO</span>
+      </a>
+      <nav class="admin-nav" aria-label="Admin">
+        <button class="admin-nav-btn is-active" data-admin-view="dashboard"><i class="icon" data-icon="grid" aria-hidden="true"></i> Dashboard</button>
+        <button class="admin-nav-btn" data-admin-view="photos"><i class="icon" data-icon="image" aria-hidden="true"></i> Gallery Manager</button>
+        <button class="admin-nav-btn" data-admin-view="videos"><i class="icon" data-icon="film" aria-hidden="true"></i> Video Manager</button>
+        <button class="admin-nav-btn" data-admin-view="downloads"><i class="icon" data-icon="download" aria-hidden="true"></i> Downloads Manager</button>
+        <button class="admin-nav-btn" data-admin-view="inbox"><i class="icon" data-icon="inbox" aria-hidden="true"></i> Inbox <span class="pill-count" id="inbox-nav-count" hidden>0</span></button>
+        <button class="admin-nav-btn" data-admin-view="settings"><i class="icon" data-icon="settings" aria-hidden="true"></i> Settings</button>
+      </nav>
+      <div class="admin-sidebar-foot">
+        <span class="admin-user"><i class="icon" data-icon="user" aria-hidden="true"></i> <span id="admin-user-email">admin</span></span>
+        <button class="btn btn-outline btn-sm btn-block" id="admin-logout-btn"><i class="icon" data-icon="log-out" aria-hidden="true"></i> Log Out</button>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-mobile-toggle" id="admin-mobile-toggle" aria-label="Open admin menu"><i class="icon" data-icon="menu" aria-hidden="true"></i></button>
+        <h2 id="admin-view-title">Dashboard</h2>
+      </header>
+
+      <div class="admin-view is-active" id="admin-view-dashboard">
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card"><i class="icon" data-icon="image" aria-hidden="true"></i><span class="admin-stat-num" id="stat-photos">0</span><span>Photos</span></div>
+          <div class="admin-stat-card"><i class="icon" data-icon="film" aria-hidden="true"></i><span class="admin-stat-num" id="stat-videos">0</span><span>Videos</span></div>
+          <div class="admin-stat-card"><i class="icon" data-icon="download" aria-hidden="true"></i><span class="admin-stat-num" id="stat-downloads">0</span><span>Resources</span></div>
+          <div class="admin-stat-card"><i class="icon" data-icon="trending-up" aria-hidden="true"></i><span class="admin-stat-num" id="stat-download-count">0</span><span>Total Downloads</span></div>
+          <div class="admin-stat-card"><i class="icon" data-icon="inbox" aria-hidden="true"></i><span class="admin-stat-num" id="stat-inquiries">0</span><span>Pending Inquiries</span></div>
+        </div>
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <h3>Recent inquiries</h3>
+            <button class="btn btn-outline btn-sm" data-admin-view="inbox">View inbox</button>
+          </div>
+          <div id="dashboard-recent-inquiries"><!-- populated by admin.js --></div>
+        </div>
+      </div>
+
+      <div class="admin-view" id="admin-view-photos">
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <h3>Add a photo</h3>
+          </div>
+          <form id="form-add-photo" class="admin-form">
+            <div class="form-row-split">
+              <div class="form-row"><label for="photo-title">Title</label><input type="text" id="photo-title" required></div>
+              <div class="form-row"><label for="photo-category">Category</label>
+                <select id="photo-category" required>
+                  <option>Education</option><option>Workshops</option><option>Sports</option><option>Community Drives</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row-split">
+              <div class="form-row"><label for="photo-date">Event date</label><input type="date" id="photo-date"></div>
+              <div class="form-row"><label for="photo-source-type">Image source</label>
+                <select id="photo-source-type">
+                  <option value="upload">Upload a file</option>
+                  <option value="url">Image URL</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row" id="photo-upload-row"><label for="photo-file">File</label><input type="file" id="photo-file" accept="image/*"></div>
+            <div class="form-row" id="photo-url-row" hidden><label for="photo-url">Image URL</label><input type="url" id="photo-url" placeholder="https://"></div>
+            <div class="form-row"><label for="photo-desc">Description <span class="opt">(optional)</span></label><textarea id="photo-desc" rows="2"></textarea></div>
+            <p class="form-error" id="photo-form-error" hidden></p>
+            <button type="submit" class="btn btn-primary"><i class="icon" data-icon="upload" aria-hidden="true"></i> Add Photo</button>
+          </form>
+        </div>
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Published photos</h3></div>
+          <div class="admin-list" id="admin-photos-list"><!-- populated by admin.js --></div>
+        </div>
+      </div>
+
+      <div class="admin-view" id="admin-view-videos">
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Add a video</h3></div>
+          <form id="form-add-video" class="admin-form">
+            <div class="form-row"><label for="video-title">Title</label><input type="text" id="video-title" required></div>
+            <div class="form-row"><label for="video-source-type">Video source</label>
+              <select id="video-source-type">
+                <option value="embed">Embed link (YouTube, Vimeo, or direct MP4 URL) &mdash; recommended</option>
+                <option value="upload">Upload a video file (under 40MB)</option>
+              </select>
+            </div>
+            <div class="form-row" id="video-embed-row"><label for="video-embed-url">Video URL</label><input type="url" id="video-embed-url" placeholder="https://youtube.com/watch?v=&hellip;"></div>
+            <div class="form-row" id="video-upload-row" hidden><label for="video-file">File</label><input type="file" id="video-file" accept="video/*"></div>
+            <div class="form-row"><label for="video-tags">Tags <span class="opt">(comma separated)</span></label><input type="text" id="video-tags" placeholder="football, community, 2026"></div>
+            <div class="form-row"><label for="video-desc">Description</label><textarea id="video-desc" rows="2"></textarea></div>
+            <p class="form-error" id="video-form-error" hidden></p>
+            <button type="submit" class="btn btn-primary"><i class="icon" data-icon="upload" aria-hidden="true"></i> Add Video</button>
+          </form>
+        </div>
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Published videos</h3></div>
+          <div class="admin-list" id="admin-videos-list"><!-- populated by admin.js --></div>
+        </div>
+      </div>
+
+      <div class="admin-view" id="admin-view-downloads">
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Add an awareness resource</h3></div>
+          <form id="form-add-download" class="admin-form">
+            <div class="form-row-split">
+              <div class="form-row"><label for="download-title">Title</label><input type="text" id="download-title" required></div>
+              <div class="form-row"><label for="download-category">Category</label>
+                <select id="download-category">
+                  <option>SRHR &amp; Health</option><option>Women's Skills</option><option>Education</option><option>General</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row"><label for="download-source-type">Resource type</label>
+              <select id="download-source-type">
+                <option value="generated">Write a guide (auto-formatted into a PDF)</option>
+                <option value="upload">Upload a file (PDF or document)</option>
+              </select>
+            </div>
+            <div class="form-row"><label for="download-summary">Short summary</label><input type="text" id="download-summary" placeholder="One line describing this resource"></div>
+            <div class="form-row" id="download-upload-row" hidden><label for="download-file">File</label><input type="file" id="download-file" accept=".pdf,.doc,.docx,image/*"></div>
+            <div id="download-generated-row">
+              <div class="form-row"><label for="download-body">Guide content</label><textarea id="download-body" rows="6" placeholder="Write the guide content here &mdash; one point per line works well."></textarea></div>
+            </div>
+            <p class="form-error" id="download-form-error" hidden></p>
+            <button type="submit" class="btn btn-primary"><i class="icon" data-icon="upload" aria-hidden="true"></i> Add Resource</button>
+          </form>
+        </div>
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Published resources</h3></div>
+          <div class="admin-list" id="admin-downloads-list"><!-- populated by admin.js --></div>
+        </div>
+      </div>
+
+      <div class="admin-view" id="admin-view-inbox">
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <h3>Messages &amp; volunteer inquiries</h3>
+            <div class="inbox-controls">
+              <select id="inbox-filter">
+                <option value="all">All categories</option>
+                <option value="volunteer">Volunteer</option>
+                <option value="donate">Donate</option>
+                <option value="partner">Partner</option>
+                <option value="general">General / Contact</option>
+              </select>
+              <button class="btn btn-outline btn-sm" id="inbox-export-csv"><i class="icon" data-icon="file-down" aria-hidden="true"></i> Export CSV</button>
+            </div>
+          </div>
+          <div class="admin-list" id="admin-inbox-list"><!-- populated by admin.js --></div>
+        </div>
+      </div>
+
+      <div class="admin-view" id="admin-view-settings">
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Impact stats</h3></div>
+          <form id="form-impact-stats" class="admin-form">
+            <div class="form-row-split">
+              <div class="form-row"><label for="stat-input-children">Children &amp; youth mentored</label><input type="number" min="0" id="stat-input-children"></div>
+              <div class="form-row"><label for="stat-input-women">Women trained</label><input type="number" min="0" id="stat-input-women"></div>
+            </div>
+            <div class="form-row-split">
+              <div class="form-row"><label for="stat-input-products">Sanitary products / month</label><input type="number" min="0" id="stat-input-products"></div>
+              <div class="form-row"><label for="stat-input-library">Library members</label><input type="number" min="0" id="stat-input-library"></div>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="icon" data-icon="check" aria-hidden="true"></i> Save Impact Stats</button>
+          </form>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Change password</h3></div>
+          <form id="form-change-password" class="admin-form">
+            <div class="form-row"><label for="cp-current">Current password</label><input type="password" id="cp-current" required></div>
+            <div class="form-row-split">
+              <div class="form-row"><label for="cp-new">New password</label><input type="password" id="cp-new" required minlength="8"></div>
+              <div class="form-row"><label for="cp-confirm">Confirm new password</label><input type="password" id="cp-confirm" required minlength="8"></div>
+            </div>
+            <p class="form-error" id="cp-error" hidden></p>
+            <button type="submit" class="btn btn-outline"><i class="icon" data-icon="lock" aria-hidden="true"></i> Update Password</button>
+          </form>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-head"><h3>Backup &amp; data</h3></div>
+          <p class="admin-panel-note">Your data lives in this browser's local storage. Export a backup regularly, especially before clearing browser data.</p>
+          <div class="settings-actions">
+            <button class="btn btn-outline" id="export-backup-btn"><i class="icon" data-icon="file-down" aria-hidden="true"></i> Export Backup (JSON)</button>
+            <label class="btn btn-outline" for="import-backup-file"><i class="icon" data-icon="upload" aria-hidden="true"></i> Import Backup</label>
+            <input type="file" id="import-backup-file" accept="application/json" class="sr-only">
+            <button class="btn btn-danger" id="reset-demo-btn"><i class="icon" data-icon="refresh-cw" aria-hidden="true"></i> Restore Demo Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="bead-row" data-beads aria-hidden="true"></div>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="logo-word footer-logo">The Rise <em>CBO</em></span>
+      <p>A grassroots community organisation in Kahawa West, Nairobi &mdash; empowering women, youth and children through education, mentorship and skills since 2017.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="programs.html">Programs</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="programs.html#education">Education</a></li>
+        <li><a href="programs.html#women">Women Empowerment</a></li>
+        <li><a href="programs.html#health">Mental Health &amp; SRHR</a></li>
+        <li><a href="programs.html#sports">Sports &amp; Talent</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Get in touch</h4>
+      <ul>
+        <li><i class="icon" data-icon="map-pin" aria-hidden="true"></i> Kahawa West, Nairobi</li>
+        <li><a href="mailto:hello@therisecbo.org">hello@therisecbo.org</a></li>
+        <li><a href="tel:+254700000000">+254 700 000 000</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>&copy; <span id="footer-year"></span> The Rise CBO. Built with care for Kahawa West.</p>
+    <a href="admin.html">Admin Portal</a>
+  </div>
+</footer>
+
+<!-- ============================= MODALS ============================= -->
+
+<div class="modal-overlay" id="modal-get-involved" hidden>
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="gi-title">
+    <button class="modal-close" data-close-modal aria-label="Close"><i class="icon" data-icon="x" aria-hidden="true"></i></button>
+    <div class="gi-modal-body">
+      <div class="gi-intro">
+        <span class="eyebrow">Get Involved</span>
+        <h2 id="gi-title">There's a place for you here</h2>
+        <div class="gi-ways">
+          <div class="gi-way"><i class="icon" data-icon="hand-heart" aria-hidden="true"></i><div><strong>Volunteer</strong><p>Teach at the library, mentor youth, coach sports or facilitate a session.</p></div></div>
+          <div class="gi-way"><i class="icon" data-icon="gift" aria-hidden="true"></i><div><strong>Donate &amp; Sponsor</strong><p>Sponsor a child's school fees, donate sanitary pads, or supply books &amp; craft materials.</p></div></div>
+          <div class="gi-way"><i class="icon" data-icon="handshake" aria-hidden="true"></i><div><strong>Partner</strong><p>Corporate or NGO partnerships for health camps and vocational training.</p></div></div>
+        </div>
+      </div>
+      <form id="form-get-involved" novalidate>
+        <div class="form-row">
+          <label for="gi-name">Full name</label>
+          <input type="text" id="gi-name" required autocomplete="name">
+        </div>
+        <div class="form-row-split">
+          <div class="form-row"><label for="gi-email">Email</label><input type="email" id="gi-email" required autocomplete="email"></div>
+          <div class="form-row"><label for="gi-phone">Phone <span class="opt">(optional)</span></label><input type="tel" id="gi-phone" autocomplete="tel"></div>
+        </div>
+        <div class="form-row">
+          <label for="gi-interest">I'm interested in</label>
+          <select id="gi-interest" required>
+            <option value="volunteer">Volunteering</option>
+            <option value="donate">Donating &amp; sponsoring</option>
+            <option value="partner">Partnering</option>
+            <option value="general">Just learning more</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="gi-area">Specific area <span class="opt">(optional)</span></label>
+          <input type="text" id="gi-area" placeholder="e.g. Teaching at the library, coaching football&hellip;">
+        </div>
+        <div class="form-row">
+          <label for="gi-message">Message</label>
+          <textarea id="gi-message" rows="4" required></textarea>
+        </div>
+        <p class="form-error" id="gi-form-error" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="icon" data-icon="send" aria-hidden="true"></i> Send My Interest
+        </button>
+      </form>
+      <div class="form-success" id="gi-form-success" hidden>
+        <i class="icon" data-icon="check-circle" aria-hidden="true"></i>
+        <h4>Thank you!</h4>
+        <p>We've received your interest and will be in touch soon.</p>
+        <button type="button" class="btn btn-outline" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-confirm" hidden>
+  <div class="modal modal-sm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+    <span class="confirm-icon"><i class="icon" data-icon="alert-triangle" aria-hidden="true"></i></span>
+    <h3 id="confirm-title">Are you sure?</h3>
+    <p id="confirm-body"></p>
+    <div class="confirm-actions">
+      <button type="button" class="btn btn-outline" data-close-modal>Cancel</button>
+      <button type="button" class="btn btn-danger-solid" id="confirm-ok-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-region" aria-live="polite"></div>
+
+<script src="js/store.js"></script>
+<script src="js/app.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

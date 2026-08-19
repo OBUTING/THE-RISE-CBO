@@ -1,0 +1,10 @@
+{
+  "name": "the-rise-cbo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Public website and Admin Portal for The Rise CBO (Kahawa West, Nairobi).",
+  "scripts": {
+    "start": "npx --yes serve . -l 5500",
+    "preview": "npx --yes serve . -l 5500"
+  }
+}
