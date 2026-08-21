@@ -24,6 +24,12 @@ document.getElementById('confirm-ok-btn').addEventListener('click', async () => 
 });
 
 /* ---------------- Auth ---------------- */
+const DEFAULT_ADMIN_EMAIL = 'obutindahoras19@gmail';
+function prefillDefaultAdminEmail() {
+  const input = document.getElementById('admin-email');
+  if (!input || input.value.trim()) return;
+  input.value = DEFAULT_ADMIN_EMAIL;
+}
 async function checkAuthState() {
   const session = Store.getSession();
   const loginView = document.getElementById('admin-login-view');
@@ -35,39 +41,230 @@ async function checkAuthState() {
   } else {
     loginView.hidden = false;
     dashView.hidden = true;
+    prefillDefaultAdminEmail();
   }
 }
 document.addEventListener('store:ready', checkAuthState);
 
 const loginForm = document.getElementById('form-admin-login');
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const errorEl = document.getElementById('admin-login-error');
-  errorEl.hidden = true;
-  const email = document.getElementById('admin-email').value.trim();
-  const password = document.getElementById('admin-password').value;
-  const remember = document.getElementById('admin-remember').checked;
-  const submitBtn = loginForm.querySelector('button[type="submit"]');
-  submitBtn.disabled = true;
-  try {
-    const ok = await Store.verifyLogin(email, password);
-    if (!ok) { errorEl.textContent = 'Incorrect email or password.'; errorEl.hidden = false; return; }
-    Store.saveSession(email, remember);
-    loginForm.reset();
-    App.showToast('Welcome back!', 'success');
-    await checkAuthState();
-  } catch (err) {
-    console.error(err);
-    errorEl.textContent = 'Something went wrong. Please try again.';
-    errorEl.hidden = false;
-  } finally {
-    submitBtn.disabled = false;
-  }
-});
-document.getElementById('fill-demo-creds').addEventListener('click', () => {
-  document.getElementById('admin-email').value = 'admin@therisecbo.org';
-  document.getElementById('admin-password').value = 'RiseKahawa2026!';
-});
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById('admin-login-error');
+    errorEl.hidden = true;
+    const email = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value;
+    const remember = document.getElementById('admin-remember').checked;
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      const ok = await Store.verifyLogin(email, password);
+      if (!ok) { errorEl.textContent = 'Incorrect email or password.'; errorEl.hidden = false; return; }
+      Store.saveSession(email, remember);
+      if (typeof loginForm.reset === 'function') loginForm.reset();
+      App.showToast('Welcome back!', 'success');
+      await checkAuthState();
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = 'Something went wrong. Please try again.';
+      errorEl.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+function showAuthMessage(el, message, isError = false) {
+  if (!el) return;
+  el.textContent = message;
+  el.classList.toggle('form-error', isError);
+  el.classList.toggle('form-message', !isError);
+  el.hidden = false;
+}
+
+function hideAuthMessage(el) {
+  if (!el) return;
+  el.hidden = true;
+  el.textContent = '';
+}
+
+function showForgotPasswordPanel() {
+  const panel = document.getElementById('admin-forgot-panel');
+  const resetPanel = document.getElementById('admin-reset-panel');
+  const signupPanel = document.getElementById('admin-signup-panel');
+  if (panel) panel.hidden = false;
+  if (resetPanel) resetPanel.hidden = true;
+  if (signupPanel) signupPanel.hidden = true;
+}
+
+function showSignupPanel() {
+  const signupPanel = document.getElementById('admin-signup-panel');
+  const forgotPanel = document.getElementById('admin-forgot-panel');
+  const resetPanel = document.getElementById('admin-reset-panel');
+  if (signupPanel) signupPanel.hidden = false;
+  if (forgotPanel) forgotPanel.hidden = true;
+  if (resetPanel) resetPanel.hidden = true;
+}
+
+function showResetPasswordPanel(email = '') {
+  const panel = document.getElementById('admin-reset-panel');
+  const forgotPanel = document.getElementById('admin-forgot-panel');
+  if (panel) panel.hidden = false;
+  if (forgotPanel) forgotPanel.hidden = true;
+  if (email && document.getElementById('reset-email')) document.getElementById('reset-email').value = email;
+}
+
+function applyResetTokenFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('reset');
+  const email = params.get('email');
+  if (!token || !email) return;
+  showResetPasswordPanel(email);
+  const tokenInput = document.getElementById('reset-token');
+  if (tokenInput) tokenInput.value = token;
+}
+
+const forgotPasswordBtn = document.getElementById('admin-forgot-password');
+if (forgotPasswordBtn) forgotPasswordBtn.addEventListener('click', showForgotPasswordPanel);
+
+const signupToggleBtn = document.getElementById('admin-signup-toggle');
+if (signupToggleBtn) signupToggleBtn.addEventListener('click', showSignupPanel);
+
+const signupForm = document.getElementById('form-admin-signup');
+if (signupForm) {
+  signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = document.getElementById('signup-status');
+    hideAuthMessage(statusEl);
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirm-password').value;
+    const submitBtn = e.currentTarget.querySelector('button[type="submit"]');
+    if (password !== confirmPassword) {
+      showAuthMessage(statusEl, 'The passwords do not match.', true);
+      return;
+    }
+    submitBtn.disabled = true;
+    try {
+      await Store.createAccount(email, password);
+      Store.saveSession(email, true);
+      if (e.currentTarget && typeof e.currentTarget.reset === 'function') e.currentTarget.reset();
+      App.showToast('Account created successfully.', 'success');
+      await checkAuthState();
+    } catch (err) {
+      console.error(err);
+      showAuthMessage(statusEl, err.message || 'We could not create your account.', true);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+const resetRequestForm = document.getElementById('form-admin-reset-request');
+if (resetRequestForm) {
+  resetRequestForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = document.getElementById('reset-request-status');
+    hideAuthMessage(statusEl);
+    const email = document.getElementById('reset-request-email').value.trim();
+    const submitBtn = e.currentTarget.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      const result = await Store.requestPasswordReset(email);
+      const resetLink = `${window.location.origin}${window.location.pathname}?reset=${encodeURIComponent(result.token)}&email=${encodeURIComponent(result.email)}`;
+      showAuthMessage(statusEl, `Reset instructions were prepared for ${result.email}. Use this link: ${resetLink}`, false);
+      showResetPasswordPanel(result.email);
+      const resetTokenInput = document.getElementById('reset-token');
+      const resetEmailInput = document.getElementById('reset-email');
+      if (resetTokenInput) resetTokenInput.value = result.token;
+      if (resetEmailInput) resetEmailInput.value = result.email;
+      App.showToast('Reset link created. Enter your new password below.', 'success');
+    } catch (err) {
+      console.error(err);
+      showAuthMessage(statusEl, err.message || 'We could not create a reset link for that email.', true);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+const resetPasswordForm = document.getElementById('form-admin-password-reset');
+if (resetPasswordForm) {
+  resetPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const statusEl = document.getElementById('reset-password-status');
+    hideAuthMessage(statusEl);
+    const email = document.getElementById('reset-email').value.trim();
+    const token = document.getElementById('reset-token').value.trim();
+    const newPassword = document.getElementById('reset-new-password').value;
+    const confirmPassword = document.getElementById('reset-confirm-password').value;
+    if (newPassword !== confirmPassword) {
+      showAuthMessage(statusEl, 'The new passwords do not match.', true);
+      return;
+    }
+    const submitBtn = e.currentTarget.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      await Store.resetPasswordWithToken(email, token, newPassword);
+      showAuthMessage(statusEl, 'Password updated successfully. You can now sign in with your new password.', false);
+      App.showToast('Password updated. Please sign in.', 'success');
+      setTimeout(() => {
+        window.history.replaceState({}, '', window.location.pathname);
+        const resetPanel = document.getElementById('admin-reset-panel');
+        const forgotPanel = document.getElementById('admin-forgot-panel');
+        if (resetPanel) resetPanel.hidden = true;
+        if (forgotPanel) forgotPanel.hidden = true;
+        const adminEmailInput = document.getElementById('admin-email');
+        if (adminEmailInput) adminEmailInput.value = email;
+        const adminPasswordInput = document.getElementById('admin-password');
+        if (adminPasswordInput) adminPasswordInput.focus();
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      showAuthMessage(statusEl, err.message || 'Something went wrong while resetting your password.', true);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+const googleLoginForm = document.getElementById('form-google-login');
+if (googleLoginForm) {
+  googleLoginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById('google-login-error');
+    const email = document.getElementById('google-email').value.trim();
+    const remember = document.getElementById('google-remember').checked;
+    const submitBtn = e.currentTarget.querySelector('button[type="submit"]');
+    if (!errorEl) return;
+    errorEl.hidden = true;
+    submitBtn.disabled = true;
+    try {
+      const ok = await Store.loginWithGoogle(email, remember);
+      if (!ok) {
+        errorEl.textContent = 'This Google account is not linked to the admin portal.';
+        errorEl.hidden = false;
+        return;
+      }
+      Store.saveSession(email, remember);
+      if (typeof googleLoginForm.reset === 'function') googleLoginForm.reset();
+      const googleModal = document.getElementById('modal-google-login');
+      if (googleModal) App.closeModal(googleModal);
+      App.showToast('Signed in with Google.', 'success');
+      await checkAuthState();
+    } catch (err) {
+      console.error(err);
+      errorEl.textContent = 'Google sign-in is unavailable at the moment. Please try again.';
+      errorEl.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+const googleLoginBtn = document.getElementById('admin-google-btn');
+if (googleLoginBtn) googleLoginBtn.addEventListener('click', () => App.openModal('modal-google-login'));
+
 document.getElementById('admin-password-toggle').addEventListener('click', () => {
   const input = document.getElementById('admin-password');
   const btn = document.getElementById('admin-password-toggle');
@@ -81,6 +278,8 @@ document.getElementById('admin-logout-btn').addEventListener('click', () => {
   App.showToast('Logged out.', 'info');
   location.href = 'home.html';
 });
+
+applyResetTokenFromUrl();
 
 /* ---------------- Admin nav / shell ---------------- */
 function closeAdminSidebar() { document.querySelector('.admin-sidebar')?.classList.remove('is-open'); }

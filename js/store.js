@@ -92,21 +92,89 @@ const Store = (() => {
   }
 
   /* ---------------- Auth ---------------- */
+  function normalizeAdminEmail(value) {
+    const email = String(value || '').toLowerCase().trim();
+    if (!email) return '';
+    return email.endsWith('.com') ? email.slice(0, -4) : email;
+  }
   async function ensureDefaultAdmin() {
     const existing = await getOne('meta', 'adminAuth');
-    if (existing) return;
-    const passwordHash = await sha256Hex('RiseKahawa2026!');
-    await put('meta', { key: 'adminAuth', email: 'admin@therisecbo.org', passwordHash });
+    const desiredEmail = 'obutindahoras19@gmail';
+    if (existing) {
+      if (normalizeAdminEmail(existing.email) !== normalizeAdminEmail(desiredEmail)) {
+        await put('meta', { ...existing, email: desiredEmail });
+      }
+      return;
+    }
+    const passwordHash = await sha256Hex('9A5X4v??');
+    await put('meta', { key: 'adminAuth', email: desiredEmail, passwordHash });
   }
   async function verifyLogin(email, password) {
     const auth = await getOne('meta', 'adminAuth');
     if (!auth) return false;
     const hash = await sha256Hex(password);
-    return auth.email.toLowerCase() === String(email).toLowerCase().trim() && auth.passwordHash === hash;
+    return normalizeAdminEmail(auth.email) === normalizeAdminEmail(email) && auth.passwordHash === hash;
   }
   async function getAdminEmail() {
     const auth = await getOne('meta', 'adminAuth');
-    return auth ? auth.email : 'admin';
+    return auth ? auth.email : 'obutindahoras19@gmail';
+  }
+  async function createAccount(email, password) {
+    const trimmedEmail = String(email || '').trim();
+    const trimmedPassword = String(password || '');
+    if (!trimmedEmail || !trimmedPassword) throw new Error('Please complete all sign-up fields.');
+    if (trimmedPassword.length < 8) throw new Error('Your password must be at least 8 characters long.');
+    const auth = await getOne('meta', 'adminAuth');
+    const desiredEmail = normalizeAdminEmail(trimmedEmail);
+    if (!desiredEmail) throw new Error('Please enter a valid email address.');
+    if (auth) {
+      const currentEmail = normalizeAdminEmail(auth.email);
+      const defaultEmail = normalizeAdminEmail('obutindahoras19@gmail');
+      if (currentEmail !== desiredEmail && currentEmail !== defaultEmail) {
+        throw new Error('An admin account already exists for another email address. Please sign in instead.');
+      }
+    }
+    const passwordHash = await sha256Hex(trimmedPassword);
+    const nextEmail = trimmedEmail.toLowerCase();
+    await put('meta', { key: 'adminAuth', email: nextEmail, passwordHash });
+    return true;
+  }
+  async function loginWithGoogle(email, remember) {
+    const auth = await getOne('meta', 'adminAuth');
+    if (!auth) return false;
+    return normalizeAdminEmail(auth.email) === normalizeAdminEmail(email);
+  }
+  async function requestPasswordReset(email) {
+    const auth = await getOne('meta', 'adminAuth');
+    const normalizedEmail = normalizeAdminEmail(email);
+    if (!auth || normalizeAdminEmail(auth.email) !== normalizedEmail) {
+      throw new Error('No account is registered for that email address.');
+    }
+    const resetToken = `${Date.now().toString(36)}-${genId()}`;
+    const resetRecord = { key: 'adminPasswordReset', email: auth.email, token: resetToken, expiresAt: Date.now() + 60 * 60 * 1000 };
+    await put('meta', resetRecord);
+    return { email: auth.email, token: resetToken };
+  }
+  async function resetPasswordWithToken(email, token, newPassword) {
+    const auth = await getOne('meta', 'adminAuth');
+    const resetRecord = await getOne('meta', 'adminPasswordReset');
+    const normalizedEmail = normalizeAdminEmail(email);
+    if (!auth || !resetRecord || normalizeAdminEmail(auth.email) !== normalizedEmail) {
+      throw new Error('This reset request is invalid.');
+    }
+    if (resetRecord.email !== auth.email || resetRecord.token !== token) {
+      throw new Error('The reset code does not match this email address.');
+    }
+    if (Date.now() > resetRecord.expiresAt) {
+      throw new Error('This reset code has expired. Please request a new one.');
+    }
+    if (newPassword.length < 8) {
+      throw new Error('Your new password must be at least 8 characters long.');
+    }
+    const newHash = await sha256Hex(newPassword);
+    await put('meta', { ...auth, passwordHash: newHash });
+    await remove('meta', 'adminPasswordReset');
+    return true;
   }
   async function changePassword(currentPassword, newPassword) {
     const auth = await getOne('meta', 'adminAuth');
@@ -455,7 +523,8 @@ Education is one of our four pillars because we believe every child deserves a s
     getDownloads, addDownload, updateDownload, deleteDownload, incrementDownloadCount,
     getInquiries, addInquiry, updateInquiry, deleteInquiry,
     getImpactStats, setImpactStats, getDashboardStats,
-    verifyLogin, getAdminEmail, changePassword,
+    verifyLogin, createAccount, loginWithGoogle, requestPasswordReset, resetPasswordWithToken,
+    getAdminEmail, changePassword,
     saveSession, getSession, clearSession,
     resizeImageFile, exportBackup, importBackup, restoreDemoContent,
     genId

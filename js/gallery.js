@@ -15,6 +15,7 @@ const TONE_GRADIENTS = {
   emerald: 'linear-gradient(135deg, #0A4A34, #4B9B7F)',
   clay: 'linear-gradient(135deg, #8B4A3D, #C1502E)'
 };
+const PUBLIC_MEDIA_VISIBLE = false;
 function toneGradient(tone) { return TONE_GRADIENTS[tone] || TONE_GRADIENTS.terracotta; }
 
 /* ---------------- Photos + lightbox ---------------- */
@@ -26,6 +27,10 @@ function photoMediaInner(p) {
 async function renderPhotos() {
   const grid = document.getElementById('photo-grid');
   if (!grid) return;
+  if (!PUBLIC_MEDIA_VISIBLE) {
+    grid.innerHTML = '<p class="gallery-empty">Photos are managed privately by the admin.</p>';
+    return;
+  }
   const photos = await Store.getPhotos();
   if (!photos.length) { grid.innerHTML = '<p class="gallery-empty">No photos published yet \u2014 check back soon.</p>'; return; }
   grid.innerHTML = photos.map((p, i) => `
@@ -103,6 +108,10 @@ function toEmbedUrl(url) {
 async function renderVideos() {
   const grid = document.getElementById('video-grid');
   if (!grid) return;
+  if (!PUBLIC_MEDIA_VISIBLE) {
+    grid.innerHTML = '<p class="gallery-empty">Videos are managed privately by the admin.</p>';
+    return;
+  }
   const videos = await Store.getVideos();
   if (!videos.length) { grid.innerHTML = '<p class="gallery-empty">No videos published yet \u2014 check back soon.</p>'; return; }
   grid.innerHTML = videos.map((v, i) => `
@@ -309,6 +318,10 @@ async function renderDownloads() {
   ];
   targets.forEach(({ el, items }) => {
     if (!el) return;
+    if (!PUBLIC_MEDIA_VISIBLE) {
+      el.innerHTML = '<p class="gallery-empty">Resources are managed privately by the admin.</p>';
+      return;
+    }
     el.innerHTML = items.length ? items.map(downloadCardHTML).join('') : '<p class="gallery-empty">No resources published yet.</p>';
     el.querySelectorAll('[data-download-id]').forEach((btn) => {
       btn.addEventListener('click', () => {
